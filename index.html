@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab1</title>
+<style>
+    body { padding-top: 50px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+  
+      <h1 style="text-align:center">Welcome to Zijie's Lab1!</h1>
+ <!-- -->
+  </div>
+  <p>Here is all users info:</p>
+  <button onclick="document.location='/'">Show all users</button><br>
+  <!--Table to show data -->
+  	<div id="data"></div>
+	<br>
+	<p>Here you can select what you want to do:</p>
+	<!--find the specific user -->
+
+	<br>
+	<textbox> Type what numebr ID you want to find: </textbox><br>
+	<input type="text" id="Oneuserid" name="Oneuserid" />
+	<button onclick="getUserIDUrl()">Get a specific user</button><br>
+	
+	<br>
+	<!--Table to show 1 user data -->
+	<div id="data1"></div>
+	<p id="err"></p>
+	<br>
+	<br>
+	<br>
+	<!--create a new user -->
+	<textbox> Create a new user: </textbox><br>
+	<br>
+		<label for="userid">What id is this new user?</label>
+		<input type="number" name="createuserid" id="createuserid">
+			<br>
+		<label for="username">What name is new this user?</label>
+		<input name="createusername" id="createusername">
+	<br>
+		<label for="userage">How old is new this user?</label>
+		<input type="number" name="createuserage" id="createuserage">
+	<br>
+		<button id="createNew" onclick="onCreateUser()">Create a new user</button>		
+		<button id="updateuser" onclick="onUpdateUser()">Update a user</button><br><br>
+	<p id="errcreate"></p>
+		<!-- </form> -->
+
+		<!--Update a user -->
+
+
+
+
+	<br>
+	<br>
+		<!--Delete a user -->
+
+
+		<label for="userid">What user id do you want to delete?</label>
+		<input type="number" name="deleteuserid" id="deleteuserid">
+
+		<button id="deleteuser" onclick="onDeleteUser()">Delete a user</button><br>
+
+
+
+	<br>
+	<br>	
+	
+
+
+
+<script>
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+	if (xhttp.readyState == 4 &&this.status == 200) {
+		renderTableAllUsers(JSON.parse(xhttp.responseText));
+		console.log("getresponseTest: "+xhttp.responseText);
+	}
+};
+xhttp.open("GET", "/users", true);
+xhttp.send();
+
+
+function renderTableAllUsers(json){
+	//创建table
+	var table= document.createElement("table");
+	//创建thead，并追加到table中
+	var thead= document.createElement("thead");
+	table.appendChild(thead);
+	//创建tr,并追加到thead
+	var tr= document.createElement("tr");
+	thead.appendChild(tr);
+	//json数组中第1个人的每个属性
+	for(var key in json[0]){
+	//创建th
+	var th= document.createElement("th");
+	//设置th的内容为key
+	th.innerHTML=key;
+	//将th追加到tr中
+	tr.appendChild(th);
+	}
+	//创建tbody元素
+	var tbody= document.createElement("tbody");
+	//将tbody追加到table中
+	table.appendChild(tbody);
+	//遍历json中所有员工
+	for(var i=0;i<json.length;i++){
+	//创建tr
+	var tr= document.createElement("tr");
+	//遍历当前员工的每个属性
+	for(var key in json[i]){
+		//创建td
+		var td= document.createElement("td");
+		//设置td的内容为当前员工的当前属性值
+		td.innerHTML=json[i][key];
+		//将td追加到tr
+		tr.appendChild(td);
+	}//(遍历结束)
+	//将tr追加到tbody中
+	tbody.appendChild(tr);
+	}
+	//将table添加到id为data的div下
+	document.getElementById("data").appendChild(table);
+}
+
+//get a specific user
+function getUserIDUrl(){
+	// Clear previous user data
+	if (document.getElementById("err").innerHTML != ""){
+		document.getElementById("err").innerHTML = "";
+	}
+	if (document.getElementById("data1").innerHTML != ""){
+		document.getElementById("data1").innerHTML = "";
+	}
+	
+	var inputVal = document.getElementById("Oneuserid").value;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 &&this.status == 200) {
+
+			renderTableOneUser([JSON.parse(xhttp.responseText)]);
+
+		} else if (xhttp.readyState == 4 &&this.status ==404) {
+			document.getElementById("err").innerHTML = xhttp.responseText;
+		
+		}
+	};
+
+	xhttp.open("GET", "/users/"+ inputVal, true);
+	xhttp.send();
+
+function renderTableOneUser(json){
+
+console.log("Oneuser:"+json)
+	//创建table
+	var table= document.createElement("table");
+	//创建thead，并追加到table中
+	var thead= document.createElement("thead");
+	table.appendChild(thead);
+	//创建tr,并追加到thead
+	var tr= document.createElement("tr");
+	thead.appendChild(tr);
+	//json数组中第1个人的每个属性
+	for(var key in json[0]){
+	//创建th
+	var th= document.createElement("th");
+	//设置th的内容为key
+	th.innerHTML=key;
+	//将th追加到tr中
+	tr.appendChild(th);
+	}
+	//创建tbody元素
+	var tbody= document.createElement("tbody");
+	//将tbody追加到table中
+	table.appendChild(tbody);
+	//遍历json中所有员工
+	for(var i=0;i<json.length;i++){
+	//创建tr
+	var tr= document.createElement("tr");
+	//遍历当前员工的每个属性
+	for(var key in json[i]){
+		//创建td
+		var td= document.createElement("td");
+		//设置td的内容为当前员工的当前属性值
+		td.innerHTML=json[i][key];
+		//将td追加到tr
+		tr.appendChild(td);
+	}//(遍历结束)
+	//将tr追加到tbody中
+	tbody.appendChild(tr);
+	}
+	//将table添加到id为data的div下
+	document.getElementById("data1").appendChild(table);
+	}
+}
+
+//create a new user
+function onCreateUser(){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "/users", true); 
+	xhttp.setRequestHeader('content-type', 'application/json');
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 &&this.status == 200) {
+		
+		}
+	};
+	var newuserid = document.getElementById("createuserid").value;
+	var newusername = document.getElementById("createusername").value;	
+	var newuserage = document.getElementById("createuserage").value;
+	var data = {
+		userid: newuserid,
+		username: newusername,
+		userage: newuserage,
+		
+	};
+	xhttp.send(JSON.stringify(data));
+	
+		window.location.replace("/")
+}
+
+//update a user
+function onUpdateUser(){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "/users/update", true); 
+	xhttp.setRequestHeader('content-type', 'application/json');
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 &&this.status == 200) {
+		
+		}
+	};
+	var newuserid = document.getElementById("createuserid").value;
+	var newusername = document.getElementById("createusername").value;	
+	var newuserage = document.getElementById("createuserage").value;
+	var data = {
+		userid: newuserid,
+		username: newusername,
+		userage: newuserage,
+		
+	};
+	xhttp.send(JSON.stringify(data));
+	window.location.replace("/")
+}
+
+//delete a user
+function onDeleteUser(){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "/users/delete", true); 
+	xhttp.setRequestHeader('content-type', 'application/json');
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 &&this.status == 200) {
+		
+		}
+	};
+	var newuserid = document.getElementById("deleteuserid").value;
+	var data = {
+		userid: newuserid,
+		
+	};
+	xhttp.send(JSON.stringify(data));
+	window.location.replace("/")
+}
+
+</script>
+	
+	
+		
+	
+</body>
+</html>
