@@ -5,7 +5,7 @@ Type: "npm run dev" to run app in dev mode.
 Type: "npm run start" to run the app in node mode. 
 Entry point is server.js.
 
-2. Different URLs
+Different URLs
 The app runs on http://localhost:3000 with html user interface of front end.
 
 There are urls for testing purposes at the backend, these are api endpoints:
